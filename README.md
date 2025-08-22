@@ -1,4 +1,4 @@
-## Leet Tracker
+## LeetCode Tracker
 
 Next.js app for tracking LeetCode progress with a heuristic algorithm to help you determine what topics you should focus your practice efforts on.
 
