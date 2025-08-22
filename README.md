@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Leet Tracker
 
-## Getting Started
+Next.js app for tracking LeetCode progress with a heuristic algorithm to help you determine what topics you should focus your practice efforts on.
 
-First, run the development server:
+### Prerequisites
+
+- Docker and Docker Compose
+- Node.js 18+ and npm (for local dev workflow)
+
+### Option A: Local dev app + Dockerized Postgres (recommended)
+
+1. Start the database container:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+docker compose up -d db
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Start the Next.js dev server (hot reload):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Open the app: `http://localhost:3000`
 
-## Learn More
+- The app will connect to the DB at `postgresql://postgres:postgres@127.0.0.1:5433/leettracker` by default.
+- Tables are auto-created on first API call.
 
-To learn more about Next.js, take a look at the following resources:
+To stop the DB container:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose down
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Option B: Run both app and DB in Docker (production-like)
 
-## Deploy on Vercel
+This builds the app and runs it without hot reload:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+docker compose up -d db web
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Then open: `http://localhost:3000`
+
+View logs:
+
+```bash
+docker compose logs -f web
+docker compose logs -f db
+```
+
+Stop all containers:
+
+```bash
+docker compose down
+```
+
+### Environment variables
+
+- App uses `DATABASE_URL`.
+  - Local dev default (no .env required): `postgresql://postgres:postgres@127.0.0.1:5433/leettracker`
+  - In `docker-compose.yml`, the `web` service uses: `postgresql://postgres:postgres@db:5432/leettracker`
+
+To override locally, create `.env.local` at the project root:
+
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/leettracker
+```
+
+### Common commands
+
+- Start DB only: `docker compose up -d db`
+- Start app locally: `npm run dev`
+- Stop everything: `docker compose down`
+
+### Data persistence
+
+- Postgres data is stored in the named volume `leet-tracker_db_data` defined in `docker-compose.yml`.
+- Your data persists across container restarts. It is only removed if you pass `-v` to `docker compose down`.
+
+### SQL migrations
+
+- Place SQL files in the `migrations/` directory with filenames like `001_name.sql`, `002_other.sql`.
+- On first API call, the app creates a `migrations` table and applies any pending SQL files in ascending filename order, recording applied files.
+- Migrations are idempotent: already-recorded files are skipped.
+- To apply new migrations, add a new `NNN_description.sql` and hit any API route (e.g. `/api/problems`).

@@ -3,12 +3,30 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --border: #00000014; /* ~black/[.08] */
+  --muted: #0000000a; /* subtle surfaces */
+  --muted-foreground: #6b7280; /* gray-500 */
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --danger: #ef4444; /* red-500 */
+  --difficulty-easy: #22c55e; /* green-500 */
+  --difficulty-medium: #eab308; /* yellow-500 */
+  --difficulty-hard: #ef4444; /* red-500 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-danger: var(--danger);
+  --color-difficulty-easy: var(--difficulty-easy);
+  --color-difficulty-medium: var(--difficulty-medium);
+  --color-difficulty-hard: var(--difficulty-hard);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -16,7 +34,23 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --border: #ffffff25; /* ~white/[.145] */
+    --muted: #ffffff14; /* subtle surfaces */
+    --muted-foreground: #9ca3af; /* gray-400/500 range */
+    --card: #0f0f0f;
+    --card-foreground: #ededed;
   }
+}
+
+/* Explicit class override to respect manual toggle */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --border: #ffffff25;
+  --muted: #ffffff14;
+  --muted-foreground: #9ca3af;
+  --card: #0f0f0f;
+  --card-foreground: #ededed;
 }
 
 body {
