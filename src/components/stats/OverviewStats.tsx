@@ -7,10 +7,6 @@ import { ProblemList } from "@/components/ProblemList";
 import { CumulativeOverTime } from "./CumulativeOverTime";
 
 export function OverviewStats({ problems }: { problems: Problem[] }) {
-  const avg = Math.round(calculateAverageMinutes(problems));
-  const total = problems.length;
-  const weekly = filterByDays(problems, 7).length;
-  const daily = filterByDays(problems, 1).length;
   const monthStart = new Date(
     new Date().getFullYear(),
     new Date().getMonth(),
