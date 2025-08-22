@@ -27,7 +27,7 @@ export function AverageByDifficulty({ problems }: { problems: Problem[] }) {
   ];
 
   return (
-    <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 md:col-span-2 lg:col-span-4">
+    <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 md:col-span-2 lg:col-span-3">
       <div className="text-sm font-medium mb-2">
         Average completion time (by difficulty)
       </div>
@@ -35,13 +35,13 @@ export function AverageByDifficulty({ problems }: { problems: Problem[] }) {
         {pills.map((p) => (
           <div
             key={p.label}
-            className="rounded border border-border p-3 flex items-center justify-between"
+            className="rounded bg-muted p-3 flex items-center justify-between"
           >
             <div className="flex items-center gap-2 text-sm">
               <span className={`inline-block h-2 w-2 rounded ${p.color}`} />
               <span>{p.label}</span>
             </div>
-            <div className="text-xl font-semibold">
+            <div className="text-sm font-semibold">
               {isNaN(p.value) ? "-" : `${p.value} mins`}
             </div>
           </div>

@@ -2,7 +2,13 @@
 import type { Problem } from "@/context/ProblemsContext";
 import { useProblems } from "@/context/ProblemsContext";
 
-export function ProblemListItem({ problem }: { problem: Problem }) {
+export function ProblemListItem({
+  problem,
+  className = "",
+}: {
+  problem: Problem;
+  className?: string;
+}) {
   const { refresh } = useProblems();
   const difficulty = (problem.difficulty || "").toUpperCase();
   const diffClass =
@@ -41,15 +47,20 @@ export function ProblemListItem({ problem }: { problem: Problem }) {
   }
 
   return (
-    <li className="flex items-start justify-between gap-3 text-sm">
+    <li
+      className={`rounded-sm py-3 px-4 flex items-start justify-between gap-3 text-sm cursor-pointer ${className}`}
+      role="link"
+      tabIndex={0}
+      onClick={() => window.open(problem.url, "_blank")}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          window.open(problem.url, "_blank");
+        }
+      }}
+    >
       <div className="min-w-0 flex-1">
-        <a
-          href={problem.url}
-          target="_blank"
-          className="underline underline-offset-2 truncate block"
-        >
-          {problem.title || problem.url}
-        </a>
+        <div className="truncate block">{problem.title || problem.url}</div>
         <div
           className="mt-1 flex flex-wrap items-center gap-1 text-xs"
           style={{ color: "var(--color-muted-foreground)" }}
@@ -92,7 +103,10 @@ export function ProblemListItem({ problem }: { problem: Problem }) {
         <button
           className="text-xs underline"
           style={{ color: "var(--color-danger)" }}
-          onClick={handleDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            void handleDelete();
+          }}
         >
           Delete
         </button>

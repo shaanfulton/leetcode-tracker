@@ -28,7 +28,7 @@ export function TotalWithBreakdown({
       </div>
       <div className="text-3xl font-semibold mt-1">{total}</div>
       <div
-        className="mt-3 flex flex-wrap gap-3 text-xs"
+        className="mt-3 flex flex-col gap-3 text-xs"
         style={{ color: "var(--color-muted-foreground)" }}
       >
         {order.map((d) => (

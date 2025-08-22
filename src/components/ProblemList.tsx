@@ -6,7 +6,7 @@ export function ProblemList() {
   const { problems, isLoading } = useProblems();
   const list = Array.isArray(problems) ? problems : [];
   return (
-    <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4">
+    <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 md:col-span-2 lg:col-span-3">
       <div className="text-sm font-medium mb-3">Completed problems</div>
       {isLoading ? (
         <div
@@ -24,8 +24,12 @@ export function ProblemList() {
         </div>
       ) : (
         <ul className="flex flex-col gap-2">
-          {list.map((p) => (
-            <ProblemListItem key={p.id} problem={p} />
+          {list.map((p, idx) => (
+            <ProblemListItem
+              key={p.id}
+              problem={p}
+              className={idx % 2 === 1 ? "bg-[var(--color-muted)]" : ""}
+            />
           ))}
         </ul>
       )}
