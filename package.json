@@ -7,7 +7,8 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "migrate": "tsx src/scripts/migrate.ts"
+    "migrate": "tsx src/scripts/migrate.ts",
+    "mock": "tsx src/scripts/generate-mock.ts"
   },
   "dependencies": {
     "lucide-react": "^0.540.0",

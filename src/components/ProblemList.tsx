@@ -25,7 +25,7 @@ export function ProblemList() {
           className="text-sm"
           style={{ color: "var(--color-muted-foreground)" }}
         >
-          No problems yet.
+          No completed problems yet.
         </div>
       ) : (
         <ul className="flex flex-col gap-2">

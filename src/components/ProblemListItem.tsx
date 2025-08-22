@@ -5,9 +5,13 @@ import { useProblems } from "@/context/ProblemsContext";
 export function ProblemListItem({
   problem,
   className = "",
+  showTags = true,
+  showDelete = true,
 }: {
   problem: Problem;
   className?: string;
+  showTags?: boolean;
+  showDelete?: boolean;
 }) {
   const { refresh } = useProblems();
   const difficulty = (problem.difficulty || "").toUpperCase();
@@ -76,15 +80,17 @@ export function ProblemListItem({
                 : difficulty}
             </span>
           ) : null}
-          {tags.slice(0, 4).map((t) => (
-            <span
-              key={`${problem.id}-${t}`}
-              className="rounded px-1 py-0.5"
-              style={{ background: "var(--color-muted)" }}
-            >
-              {t}
-            </span>
-          ))}
+          {showTags
+            ? tags.slice(0, 4).map((t) => (
+                <span
+                  key={`${problem.id}-${t}`}
+                  className="rounded px-1 py-0.5"
+                  style={{ background: "var(--color-muted)" }}
+                >
+                  {t}
+                </span>
+              ))
+            : null}
         </div>
       </div>
       <div className="flex items-center gap-3">
@@ -100,16 +106,18 @@ export function ProblemListItem({
         >
           {problem.minutesToSolve} mins
         </div>
-        <button
-          className="text-xs underline"
-          style={{ color: "var(--color-danger)" }}
-          onClick={(e) => {
-            e.stopPropagation();
-            void handleDelete();
-          }}
-        >
-          Delete
-        </button>
+        {showDelete ? (
+          <button
+            className="text-xs underline"
+            style={{ color: "var(--color-danger)" }}
+            onClick={(e) => {
+              e.stopPropagation();
+              void handleDelete();
+            }}
+          >
+            Delete
+          </button>
+        ) : null}
       </div>
     </li>
   );

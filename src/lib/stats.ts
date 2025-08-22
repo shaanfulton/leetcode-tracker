@@ -127,19 +127,18 @@ export function computeCapabilityForTag(
   const baseScore = Math.min(1, weightedSum / 4);
   const volumeFactor = Math.min(1, total / 8);
 
-  // Recency: require a recent medium unless sufficient history; extend grace with more attempts
+  // Recency via forgetting curve (exponential decay):
+  // retention ~ exp(-lambda * daysSince), where half-life grows with history
   const now = Date.now();
-  const allowedDays = 3 + Math.floor(total / 10) * 2; // grows slowly with more history
   let recencyFactor = 1;
   if (lastPracticedAt) {
     const daysSince = (now - lastPracticedAt.getTime()) / (24 * 60 * 60 * 1000);
-    recencyFactor = Math.max(
-      0,
-      Math.min(
-        1,
-        1 - Math.max(0, daysSince - allowedDays) / Math.max(1, allowedDays)
-      )
-    );
+    const baseHalfLifeDays = 7; // base half-life in days
+    const halfLife = baseHalfLifeDays * (1 + Math.log1p(total)); // more attempts → slower forgetting
+    const lambda = Math.log(2) / Math.max(1, halfLife);
+    const raw = Math.exp(-lambda * Math.max(0, daysSince));
+    const recencyFloor = 0.1; // never fully zero out historical work
+    recencyFactor = Math.max(recencyFloor, Math.min(1, raw));
   } else {
     recencyFactor = 0; // never practiced
   }

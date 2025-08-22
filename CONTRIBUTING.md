@@ -76,6 +76,46 @@ See `.env.example` for other environment variables used in this project (the res
 - Start app locally: `npm run dev`
 - Stop everything: `docker compose down`
 
+### Mock data generator
+
+You can quickly seed your database with realistic problem history for development.
+
+Run the generator (DB must be running):
+
+```bash
+npm run mock -- --count 80 --days 90 --reset
+```
+
+Flags:
+
+- `--count <n>`: how many mock problems to insert (default 50)
+- `--days <n>`: spread created_at dates across the last N days (default 60)
+- `--reset`: delete existing problems for the target user before inserting
+- `--delete`: delete problems for the target user and exit (no insert)
+- `--provider <name>`: auth provider for the target user (default `mock`)
+- `--provider-account-id <id>`: provider account id for the target user (default `seed`)
+
+Using an existing user (e.g., your GitHub account):
+
+1. Look up your user identifiers:
+
+```bash
+psql -h 127.0.0.1 -p 5433 -U postgres -d leettracker -c "SELECT id, provider, provider_account_id, name, email FROM users;"
+```
+
+2. Pass those to the generator:
+
+```bash
+npm run mock -- --provider github --provider-account-id <THE_ID_FROM_DB> --count 80 --days 90 --reset
+```
+
+Notes:
+
+- If the `provider`/`provider_account_id` pair doesn’t exist, the script creates a user.
+- Migrations are applied automatically if needed.
+- The generator respects `DATABASE_URL` just like the app.
+- Problem titles are sampled randomly from the LeetCode 150 set; URLs are derived from title slugs.
+
 ### Data persistence
 
 - Postgres data is stored in the named volume `leet-tracker_db_data` defined in `docker-compose.yml`.
