@@ -34,7 +34,9 @@ export function TotalWithBreakdown({
         {order.map((d) => (
           <div key={d} className="flex items-center gap-1">
             <span className={`inline-block h-2 w-2 rounded ${colors[d]}`} />
-            <span>{d}</span>
+            <span>
+              {d === "EASY" ? "Easy" : d === "MEDIUM" ? "Medium" : "Hard"}
+            </span>
             <span style={{ color: "#9ca3af" }}>({counts[d]})</span>
           </div>
         ))}

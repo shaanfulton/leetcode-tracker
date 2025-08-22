@@ -41,3 +41,24 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    await ensureInitialized();
+    const { searchParams } = new URL(req.url);
+    const idParam = searchParams.get("id");
+    const id = idParam ? Number(idParam) : NaN;
+    if (!id || Number.isNaN(id)) {
+      return NextResponse.json(
+        { error: "Missing or invalid id" },
+        { status: 400 }
+      );
+    }
+    await pool.query(`DELETE FROM problems WHERE id = $1`, [id]);
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("DELETE /api/problems error:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

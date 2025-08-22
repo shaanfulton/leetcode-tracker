@@ -17,18 +17,20 @@ export function AverageByDifficulty({ problems }: { problems: Problem[] }) {
   const hard = Math.round(calculateAverageMinutes(groups.HARD));
 
   const pills = [
-    { label: "EASY", value: easy, color: "bg-[var(--color-difficulty-easy)]" },
+    { label: "Easy", value: easy, color: "bg-[var(--color-difficulty-easy)]" },
     {
-      label: "MEDIUM",
+      label: "Medium",
       value: med,
       color: "bg-[var(--color-difficulty-medium)]",
     },
-    { label: "HARD", value: hard, color: "bg-[var(--color-difficulty-hard)]" },
+    { label: "Hard", value: hard, color: "bg-[var(--color-difficulty-hard)]" },
   ];
 
   return (
     <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 md:col-span-2 lg:col-span-4">
-      <div className="text-sm font-medium mb-2">Avg. time by difficulty</div>
+      <div className="text-sm font-medium mb-2">
+        Average completion time (by difficulty)
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {pills.map((p) => (
           <div
@@ -40,7 +42,7 @@ export function AverageByDifficulty({ problems }: { problems: Problem[] }) {
               <span>{p.label}</span>
             </div>
             <div className="text-xl font-semibold">
-              {isNaN(p.value) ? "-" : `${p.value}m`}
+              {isNaN(p.value) ? "-" : `${p.value} mins`}
             </div>
           </div>
         ))}

@@ -50,6 +50,8 @@ export type CapabilityBreakdown = {
   lastPracticedAt: Date | null;
   details: Array<{
     id: number;
+    title: string | null;
+    url: string;
     difficulty: Difficulty;
     minutesToSolve: number;
     createdAt: Date;
@@ -101,6 +103,8 @@ export function computeCapabilityForTag(
     weightedSum += contribution;
     details.push({
       id: p.id,
+      title: p.title ?? null,
+      url: p.url,
       difficulty: d,
       minutesToSolve: t,
       createdAt: created,

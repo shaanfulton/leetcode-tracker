@@ -27,7 +27,7 @@ export function AddProblemForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 flex flex-col gap-3"
+      className="sticky top-10 w-full rounded-lg border border-border bg-card text-card-foreground p-4 flex flex-col gap-3"
     >
       <div className="text-sm font-medium">Add problem</div>
       <input
@@ -45,9 +45,9 @@ export function AddProblemForm() {
           max={180}
           value={minutes}
           onChange={(e) => setMinutes(Number(e.target.value))}
-          className="flex-1"
+          className="flex-1 appearance-none h-2 rounded-full bg-muted accent-foreground outline-none"
         />
-        <div className="w-16 text-right text-sm">{minutes}m</div>
+        <div className="w-16 text-right text-sm">{minutes} mins</div>
       </div>
       {error ? (
         <div className="text-xs" style={{ color: "var(--color-danger)" }}>
