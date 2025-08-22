@@ -28,7 +28,10 @@ export function AverageByDifficulty({ problems }: { problems: Problem[] }) {
 
   return (
     <div className="w-full rounded-lg border border-border bg-card text-card-foreground p-4 md:col-span-2 lg:col-span-3">
-      <div className="text-sm font-medium mb-2">
+      <div
+        className="text-sm font-medium mb-2"
+        style={{ color: "var(--color-muted-foreground)" }}
+      >
         Average completion time (by difficulty)
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

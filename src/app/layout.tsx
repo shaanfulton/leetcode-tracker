@@ -31,9 +31,7 @@ export default function RootLayout({
       >
         <Providers>
           <div className="max-w-5xl mx-auto py-4 flex items-center justify-between">
-            <h1 className="text-lg font-medium">
-              A Rather Generic LeetCode Tracker
-            </h1>
+            <h1 className="text-lg font-medium">Inverse Social Life Tracker</h1>
             <AuthButton />
           </div>
           {children}
