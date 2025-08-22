@@ -1,6 +1,7 @@
 "use client";
 import { useProblems } from "@/context/ProblemsContext";
 import { useState } from "react";
+import confetti from "canvas-confetti";
 
 export function AddProblemForm() {
   const { addProblem, isLoading } = useProblems();
@@ -63,6 +64,23 @@ export function AddProblemForm() {
       setSubmitting(true);
       const canonical = normalizeLeetCodeUrl(url) || url;
       await addProblem({ url: canonical, minutesToSolve: minutes });
+      // Celebration effect on successful submit
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+        setTimeout(() => {
+          confetti({
+            particleCount: 60,
+            spread: 120,
+            scalar: 0.9,
+            ticks: 200,
+            origin: { y: 0.6 },
+          });
+        }, 150);
+      } catch {}
       setUrl("");
       setMinutes(30);
       setUrlTouched(false);

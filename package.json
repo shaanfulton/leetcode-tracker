@@ -11,6 +11,7 @@
     "mock": "tsx src/scripts/generate-mock.ts"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.3",
     "lucide-react": "^0.540.0",
     "next": "15.5.0",
     "next-auth": "^4.24.11",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/pg": "^8.15.5",
     "@types/react": "^19",
