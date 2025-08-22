@@ -354,7 +354,7 @@ async function insertMockProblems(userId: number, count: number, days: number) {
   try {
     await client.query("BEGIN");
     const values: string[] = [];
-    const params: any[] = [];
+    const params: (string | number | Date | string[] | null)[] = [];
     let p = 1;
     for (const r of rows) {
       values.push(
@@ -389,29 +389,23 @@ async function main() {
   await ensureInitialized({ allowMigrate: true });
   const userId = await getOrCreateUser(opts.provider, opts.providerAccountId);
   if (opts.deleteOnly) {
-    // eslint-disable-next-line no-console
     console.log(`[mock] Deleting all problems for user ${userId}`);
     await resetProblemsForUser(userId);
-    // eslint-disable-next-line no-console
     console.log(`[mock] Done.`);
     return;
   }
   if (opts.reset) {
-    // eslint-disable-next-line no-console
     console.log(`[mock] Resetting existing problems for user ${userId}`);
     await resetProblemsForUser(userId);
   }
-  // eslint-disable-next-line no-console
   console.log(
     `[mock] Inserting ${opts.count} problems within the last ${opts.days} days for user ${userId}`
   );
   await insertMockProblems(userId, opts.count, opts.days);
-  // eslint-disable-next-line no-console
   console.log(`[mock] Done.`);
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
   console.error(err);
   process.exit(1);
 });
