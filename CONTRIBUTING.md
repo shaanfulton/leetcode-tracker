@@ -68,6 +68,8 @@ To override locally, create `.env.local` at the project root:
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/leettracker
 ```
 
+See `.env.example` for other environment variables used in this project (the rest are for authentication and deployment). You can create your own GitHub Application for authentication locally.
+
 ### Common commands
 
 - Start DB only: `docker compose up -d db`
