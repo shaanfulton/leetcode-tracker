@@ -41,11 +41,19 @@ export async function fetchLeetCodeMeta(problemUrl: string): Promise<LeetMeta> {
       cache: "no-store",
     });
     if (!res.ok) return { title: null, difficulty: null, tags: [] };
-    const json = await res.json();
-    const q = json?.data?.question;
+    const json: unknown = await res.json();
+    type GqlTag = { name?: string | null };
+    type GqlQuestion = {
+      questionTitle?: string | null;
+      difficulty?: string | null;
+      topicTags?: GqlTag[] | null;
+    };
+    const q = (json as { data?: { question?: GqlQuestion } })?.data?.question;
     if (!q) return { title: null, difficulty: null, tags: [] };
     const tags: string[] = Array.isArray(q.topicTags)
-      ? q.topicTags.map((t: any) => String(t?.name || "")).filter(Boolean)
+      ? (q.topicTags as GqlTag[])
+          .map((t) => (t?.name ?? "").toString())
+          .filter((n): n is string => Boolean(n))
       : [];
     return {
       title: q.questionTitle ?? null,

@@ -1,7 +1,6 @@
 "use client";
 
 import { ProblemsProvider, useProblems } from "@/context/ProblemsContext";
-import { StatsCard } from "@/components/StatsCard";
 import { AddProblemForm } from "@/components/AddProblemForm";
 import { OverviewStats } from "@/components/stats/OverviewStats";
 import { PracticeTab } from "@/components/stats/PracticeTab";

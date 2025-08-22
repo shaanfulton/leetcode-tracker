@@ -76,8 +76,17 @@ export function computeCapabilityForTag(
   let lastPracticedAt: Date | null = null;
 
   // Optimal times (min)
-  const optimal = { EASY: 10, MEDIUM: 20, HARD: 30 } as const;
-  const weights = { EASY: 0.5, MEDIUM: 1, HARD: 2, UNKNOWN: 0.5 } as const;
+  const optimal: Record<Exclude<Difficulty, "UNKNOWN">, number> = {
+    EASY: 10,
+    MEDIUM: 20,
+    HARD: 30,
+  };
+  const weights: Record<Difficulty, number> = {
+    EASY: 0.5,
+    MEDIUM: 1,
+    HARD: 2,
+    UNKNOWN: 0.5,
+  };
 
   const details: CapabilityBreakdown["details"] = [];
   let weightedSum = 0;
@@ -91,14 +100,14 @@ export function computeCapabilityForTag(
     if (!lastPracticedAt || created > lastPracticedAt)
       lastPracticedAt = created;
 
-    const opt = d in optimal ? ((optimal as any)[d] as number) : 20;
+    const opt = d === "UNKNOWN" ? 20 : optimal[d];
     const t = Math.max(0, p.minutesToSolve || 0);
     // Over-time attempts still contribute: decay by ratio with a small floor
     // If t <= opt → near 1, if t >> opt → approaches floor (e.g., 0.1)
     const ratio = t > 0 ? opt / t : 1;
     const timeFloor = 0.1;
     const timeFactor = Math.max(timeFloor, Math.min(1, ratio));
-    const weight = (weights as any)[d] as number;
+    const weight = weights[d];
     const contribution = weight * timeFactor;
     weightedSum += contribution;
     details.push({

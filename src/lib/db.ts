@@ -17,8 +17,12 @@ if (!global.__dbPool) {
   global.__dbPool = pool;
 }
 
-export async function ensureInitialized(): Promise<void> {
+export async function ensureInitialized(options?: {
+  allowMigrate?: boolean;
+}): Promise<void> {
   if (global.__dbInitialized) return;
+  const allowMigrate =
+    options?.allowMigrate ?? process.env.NODE_ENV !== "production";
   let client;
   try {
     client = await pool.connect();
@@ -27,8 +31,10 @@ export async function ensureInitialized(): Promise<void> {
     throw err;
   }
   try {
-    // Run SQL migrations (idempotent)
-    await runMigrations();
+    if (allowMigrate) {
+      // Run SQL migrations (idempotent)
+      await runMigrations();
+    }
     global.__dbInitialized = true;
   } finally {
     client.release();
