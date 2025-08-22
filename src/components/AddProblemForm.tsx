@@ -10,22 +10,41 @@ export function AddProblemForm() {
   const [error, setError] = useState<string | null>(null);
   const [urlTouched, setUrlTouched] = useState(false);
 
+  const normalizeLeetCodeUrl = (value: string): string | null => {
+    if (!value) return null;
+    const trimmed = value.trim().replace(/^@+/, "");
+    try {
+      const parsed = new URL(trimmed);
+      const host = parsed.hostname.replace(/^www\./, "");
+      if (host !== "leetcode.com") return null;
+      const match = parsed.pathname.match(/^\/problems\/([^\/]+)/);
+      if (!match) return null;
+      const slug = match[1];
+      return `https://leetcode.com/problems/${slug}/`;
+    } catch {
+      return null;
+    }
+  };
+
   const validateUrl = (value: string): string | null => {
     if (!value) return null; // Defer empty-state message to required/UX hints
-    try {
-      const parsed = new URL(value);
-      const host = parsed.hostname.replace(/^www\./, "");
-      if (host !== "leetcode.com") {
-        return "Only leetcode.com problem URLs are supported.";
+    const normalized = normalizeLeetCodeUrl(value);
+    if (!normalized) {
+      try {
+        const parsed = new URL(value);
+        const host = parsed.hostname.replace(/^www\./, "");
+        if (host !== "leetcode.com") {
+          return "Only leetcode.com problem URLs are supported.";
+        }
+        if (!/^\/problems\/[^/]+/.test(parsed.pathname)) {
+          return "Paste a URL to a specific problem, e.g., /problems/two-sum";
+        }
+        return null;
+      } catch {
+        return "Enter a valid URL.";
       }
-      const path = parsed.pathname;
-      if (!/^\/problems\/[^/]+\/?$/.test(path)) {
-        return "Paste a URL to a specific problem, e.g., /problems/two-sum";
-      }
-      return null;
-    } catch {
-      return "Enter a valid URL.";
     }
+    return null;
   };
 
   const urlError = urlTouched || !!url ? validateUrl(url) : null;
@@ -42,7 +61,8 @@ export function AddProblemForm() {
     setError(null);
     try {
       setSubmitting(true);
-      await addProblem({ url, minutesToSolve: minutes });
+      const canonical = normalizeLeetCodeUrl(url) || url;
+      await addProblem({ url: canonical, minutesToSolve: minutes });
       setUrl("");
       setMinutes(30);
       setUrlTouched(false);
@@ -76,7 +96,11 @@ export function AddProblemForm() {
           setUrl(e.target.value);
           if (error) setError(null);
         }}
-        onBlur={() => setUrlTouched(true)}
+        onBlur={(e) => {
+          setUrlTouched(true);
+          const normalized = normalizeLeetCodeUrl(e.currentTarget.value);
+          if (normalized) setUrl(normalized);
+        }}
         aria-invalid={!!urlError}
         aria-describedby="problemUrlHelp"
         className="w-full rounded border border-border bg-transparent px-3 py-2 text-sm outline-none"
@@ -98,7 +122,33 @@ export function AddProblemForm() {
             >
               Time to solve
             </label>
-            <div className="text-xs text-muted-foreground">{minutes} min</div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <input
+                id="minutesInput"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={minutes}
+                aria-label="Minutes to solve"
+                onChange={(e) => {
+                  const raw = e.target.value;
+                  if (raw.trim() === "") return;
+                  const next = Number(raw);
+                  if (Number.isNaN(next)) return;
+                  const clamped = Math.max(1, Math.min(180, next));
+                  setMinutes(clamped);
+                }}
+                onBlur={(e) => {
+                  const raw = e.target.value;
+                  const next = Number(raw);
+                  if (Number.isNaN(next)) return;
+                  const clamped = Math.max(1, Math.min(180, next));
+                  if (clamped !== minutes) setMinutes(clamped);
+                }}
+                className="w-14 bg-transparent text-right outline-none border-0 p-0 focus:outline-none"
+              />
+              <span>min</span>
+            </div>
           </div>
           <input
             id="minutes"
